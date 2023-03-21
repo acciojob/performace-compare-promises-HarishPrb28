@@ -13,39 +13,30 @@ const apiUrls = [
 ];
 
 // You can write your code here
-const fetchData = (url) => {
+function fetchData(url) {
   return fetch(url).then((response) => response.json());
-};
+}
 
-// Function to display the time taken for Promise.all and Promise.any in the table
-const displayTimeTaken = (apiIndex, timeTakenAll, timeTakenAny) => {
-  const outputAll = document.getElementById(`output-all${apiIndex}`);
-  const outputAny = document.getElementById(`output-any${apiIndex}`);
-  outputAll.innerText = `${timeTakenAll} ms`;
-  outputAny.innerText = `${timeTakenAny} ms`;
-};
+// Use Promise.all() to fetch data from all APIs and measure the time taken
+const startAll = performance.now();
+Promise.all(apiUrls.map(fetchData))
+  .then((results) => {
+    const endAll = performance.now();
+    const timeTakenAll = (endAll - startAll) / 1000;
+    document.getElementById("output-all").innerText = timeTakenAll.toFixed(3);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
-// Function to fetch data from multiple APIs using Promise.all and Promise.any
-const fetchDataFromApis = async () => {
-  const promises = urls.map((url) => fetchData(url));
-
-  // Measure time taken for Promise.all
-  const startTimeAll = performance.now();
-  const resultsAll = await Promise.all(promises);
-  const endTimeAll = performance.now();
-  const timeTakenAll = endTimeAll - startTimeAll;
-
-  // Measure time taken for Promise.any
-  const startTimeAny = performance.now();
-  const resultAny = await Promise.any(promises);
-  const endTimeAny = performance.now();
-  const timeTakenAny = endTimeAny - startTimeAny;
-
-  // Display the time taken for each method in the table
-  for (let i = 0; i < urls.length; i++) {
-    displayTimeTaken(i + 1, timeTakenAll, timeTakenAny);
-  }
-};
-
-// Call the fetchDataFromApis function to fetch data from the APIs and display the time taken
-fetchDataFromApis();
+// Use Promise.any() to fetch data from APIs and measure the time taken
+const startAny = performance.now();
+Promise.any(apiUrls.map(fetchData))
+  .then((result) => {
+    const endAny = performance.now();
+    const timeTakenAny = (endAny - startAny) / 1000;
+    document.getElementById("output-any").innerText = timeTakenAny.toFixed(3);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
