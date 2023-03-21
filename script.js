@@ -13,3 +13,26 @@ const apiUrls = [
 ];
 
 // You can write your code here
+const fetchDataFromApis = async () => {
+  const promises = urls.map((url) => fetchData(url));
+
+  // Measure time taken for Promise.all
+  const startTimeAll = performance.now();
+  const resultsAll = await Promise.all(promises);
+  const endTimeAll = performance.now();
+  const timeTakenAll = endTimeAll - startTimeAll;
+
+  // Measure time taken for Promise.any
+  const startTimeAny = performance.now();
+  const resultAny = await Promise.any(promises);
+  const endTimeAny = performance.now();
+  const timeTakenAny = endTimeAny - startTimeAny;
+
+  // Display the time taken for each method in the table
+  for (let i = 0; i < urls.length; i++) {
+    displayTimeTaken(i + 1, timeTakenAll, timeTakenAny);
+  }
+};
+
+// Call the fetchDataFromApis function to fetch data from the APIs and display the time taken
+fetchDataFromApis();
