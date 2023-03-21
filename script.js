@@ -13,6 +13,19 @@ const apiUrls = [
 ];
 
 // You can write your code here
+const fetchData = (url) => {
+  return fetch(url).then((response) => response.json());
+};
+
+// Function to display the time taken for Promise.all and Promise.any in the table
+const displayTimeTaken = (apiIndex, timeTakenAll, timeTakenAny) => {
+  const outputAll = document.getElementById(`output-all${apiIndex}`);
+  const outputAny = document.getElementById(`output-any${apiIndex}`);
+  outputAll.innerText = `${timeTakenAll} ms`;
+  outputAny.innerText = `${timeTakenAny} ms`;
+};
+
+// Function to fetch data from multiple APIs using Promise.all and Promise.any
 const fetchDataFromApis = async () => {
   const promises = urls.map((url) => fetchData(url));
 
